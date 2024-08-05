@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,31 +50,45 @@ public class Player : MonoBehaviour
         {
             if (_oxygenTimer + Time.fixedDeltaTime >= _oxygenUseTime && _oxygen > 0)
             {
-                _oxygen--;
-                if (_oxygen < _oxygenElements.Count / 2)
-                    _oxygenAudio.Play();
-
-                _oxygenTimer = 0f;
-                UpdateOxygenElements();
+                RemoveOxygen();
             }
             else
                 _oxygenTimer += Time.fixedDeltaTime;
 
             if (_playerMovement.IsMoving)
             {
-                if (_fuelTimer + Time.fixedDeltaTime >= _fuelUseTime && _fuel > 0)
+                if (_playerMovement.IsAfterburner)
                 {
-                    _fuel--;
-                    if (_fuel < _fuelElements.Count / 2)
-                        _fuelAudio.Play();
-
-                    _fuelTimer = 0f;
-                    UpdateFuelElements();
+                    if (_fuelTimer + Time.fixedDeltaTime * 2 >= _fuelUseTime && _fuel > 0)
+                        RemoveFuel();
+                    else
+                        _fuelTimer += Time.fixedDeltaTime * 2;
                 }
                 else
-                    _fuelTimer += Time.fixedDeltaTime;
+                {
+                    if (_fuelTimer + Time.fixedDeltaTime >= _fuelUseTime && _fuel > 0)
+                        RemoveFuel();
+                    else
+                        _fuelTimer += Time.fixedDeltaTime;
+                }
+
             }
         }
+    }
+
+    private void RemoveFuel()
+    {
+        _fuel--;
+        if (_fuel < _fuelElements.Count / 2)
+            _fuelAudio.Play();
+
+        _fuelTimer = 0f;
+        UpdateFuelElements();
+    }
+
+    private void RemoveOxygen()
+    {
+
     }
 
     private void UpdateOxygenElements()

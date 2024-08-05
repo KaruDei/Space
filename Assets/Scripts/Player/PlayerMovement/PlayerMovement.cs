@@ -13,8 +13,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 _moveDirection;
     private Vector3 _rotateDirection;
+    
+    private float _afterburnerSpeed;
 
-    [HideInInspector] public bool IsMoving = false;
+    public bool IsMoving = false;
+    public bool IsAfterburner = false;
 
     private void FixedUpdate()
     {
@@ -29,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
         if (_moveDirection.magnitude != 0)
         {
             IsMoving = true;
-            _rb.AddForce(transform.TransformDirection(_moveDirection * _maxMoveSpeed * Time.fixedDeltaTime), ForceMode.Acceleration);
+            _rb.AddForce(transform.TransformDirection(_moveDirection * (_maxMoveSpeed + _afterburnerSpeed) * Time.fixedDeltaTime), ForceMode.Acceleration);
         }
         else
             IsMoving = false;
@@ -44,5 +47,19 @@ public class PlayerMovement : MonoBehaviour
     public void RemoveVelocity()
     {
         _rb.velocity = Vector3.zero;
+    }
+
+    public void Afterburner(bool status) 
+    {
+        if (status) 
+        {
+            IsAfterburner = true;
+            _afterburnerSpeed = _maxMoveSpeed;
+        }
+        else
+        {
+            IsAfterburner = false;
+            _afterburnerSpeed = 0f;
+        }
     }
 }
