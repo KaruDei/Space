@@ -88,7 +88,12 @@ public class Player : MonoBehaviour
 
     private void RemoveOxygen()
     {
+        _oxygen--;
+        if (_oxygen < _oxygenElements.Count / 2)
+            _oxygenAudio.Play();
 
+        _oxygenTimer = 0f;
+        UpdateOxygenElements();
     }
 
     private void UpdateOxygenElements()
